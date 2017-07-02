@@ -213,22 +213,19 @@ class MercadoLivre
     /**
     * 
     * Active Promotional packages are packages with classified publications of car dealerships
-    * @var array
-    *      id_site
     *
     * @return array     
     *
     **/
-    public function getListingTypes($params)
+    public function getListingTypes()
     {
-        $endpoint = $this->_api . '/sites/'.$params['id_site'].'/listing_types';
+        $endpoint = $this->_api . '/sites/MLB/listing_types';
 
         return $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->addPut('status', 'active')
             ->getResponse();
     }
-
 
     /**
     * 
@@ -458,7 +455,9 @@ class MercadoLivre
     **/
     public function getQuestionsItemParticular($params)
     {
-        $endpoint = $this->_api.'/items/'.$params['id_item'].'questions/search?data_from='.$params['date_from'].'&date_to='.$params['date_to'].'limit='$params['limit'].'&offset='.$params['offset'];
+
+        $endpoint = $this->_api.'/items/'.$params['id_item'].'contacts/questions/search?data_from='.$params['date_from'].'&date_to='.$params['date_to'].'limit='.$params['limit'].'&offset='.$params['offset'];
+
         $response = $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();
@@ -473,15 +472,13 @@ class MercadoLivre
     *      id_item
     *      date_from
     *      date_to
-    *      limit
-    *      offset
     *
     * @return array     
     *
     **/
     public function getViewPhoneItem($params)
     {
-        $endpoint = $this->_api.'/items/'.$params['id_item'].'contacts/questions/search?data_from='.$params['date_from'].'&date_to='.$params['date_to'].'limit='$params['limit'].'&offset='.$params['offset'];
+        $endpoint = $this->_api.'/items/'.$params['id_item'].'contacts/questions/search?data_from='.$params['date_from'].'&date_to='.$params['date_to'];
         $response = $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();
@@ -553,6 +550,43 @@ class MercadoLivre
 
     /**
     * 
+    * GET received questions  
+    *
+    *
+    * @return array     
+    *
+    **/
+    public function getReceivedQuestions()
+    {
+        $endpoint = $this->_api.'/received_questions/search';
+        $response = $this->request($endpoint)
+            ->addHeader('Accept', 'application/json')
+            ->getResponse();
+        return $response;
+    }
+
+    /**
+    * 
+    * GET question Info
+    *
+    * @var array
+    *      id_question
+    *
+    * @return array     
+    *
+    **/
+    public function getQuestionInfo($params)
+    {
+        $endpoint = $this->_api.'/questions/'.$params['id_question'];
+        $response = $this->request($endpoint)
+            ->addHeader('Accept', 'application/json')
+            ->getResponse();
+        return $response;
+    }
+    
+
+    /**
+    * 
     * GET the property description of the item 
     *
     * @var array
@@ -580,7 +614,7 @@ class MercadoLivre
     * @return array     
     *
     **/
-    public function getItems($params)
+    public function getDealByUse($params)
     {
         $endpoint = $this->_api.'/uses/'.$params['id_user'].'/items/search?access_token='.self::$cfg['token'];
         $response = $this->request($endpoint)
@@ -609,6 +643,50 @@ class MercadoLivre
     }
 
     /**
+    * GET Returns brand cars and the children category of marker
+
+    *
+    * @var array
+    *      id_seller
+    *
+    * @return array     
+    *
+    **/
+    public function getMarker()
+    {
+        $endpoint = $this->_api.'/categories/MLB1744';
+        $response = $this->request($endpoint)
+            ->addHeader('Accept', 'application/json')
+            ->getResponse();
+            return [
+                'status' => 'ok',
+                'body' => $response['body']['children_categories']
+            ];
+    }
+
+    /**
+    * GET Returns model cars and the children category of model
+
+    *
+    * @var array
+    *      id_seller
+    *
+    * @return array     
+    *
+    **/
+    public function getModelAndCategory($params)
+    {
+        $endpoint = $this->_api.'/categories/'.$params['id_marker'];
+        $response = $this->request($endpoint)
+            ->addHeader('Accept', 'application/json')
+            ->getResponse();
+            return [
+                'status' => 'ok',
+                'body' => $response['body']['children_categories']
+            ];
+    }
+
+    /**
     * 
     * GET Returns orders info
     *
@@ -618,7 +696,7 @@ class MercadoLivre
     * @return array     
     *
     **/
-    public function getRecentSeller($params)
+    public function getRecentSearchSeller($params)
     {
         $endpoint = $this->_api.'/orders/search/recent?seller='.$params['id_seller'].'&access_token'.self::$cfg['token'];
         $response = $this->request($endpoint)
@@ -633,7 +711,6 @@ class MercadoLivre
     *
     *
     * @var array
-    *      id_user
     *
     * @return array     
     *
@@ -645,31 +722,35 @@ class MercadoLivre
         $attributes=[
             [
                 'id'=>'BRAND',
-                'name'=>$params['marker']
+                'value_id'=>$params['marker']
             ],
             [
                 'id'=>'MODEL',
-                'name'=>$params['model']
+                'value_id'=>$params['model']
             ],
             [
                 'id'=>'FUEL_TYPE',
-                'value'=>$params['fuel_type']
+                'value_id'=>$params['fuel_type']
             ],
             [
                 'id'=>'KILOMETERS',
-                'value'=>$params['km']
+                'value_name'=>$params['km'].' km'
             ],
             [
                 'id'=>'VEHICLE_YEAR',
-                'value'=>$params['year']
+                'value_name'=>$params['year']
             ],
             [
                 'id'=>'DOORS',
-                'value'=>$params['doors']
+                'value_name'=>$params['doors']
             ],
             [
                 'id'=>'COLOR',
                 'value'=>$params['color']
+            ],
+            [
+                'id'=>'VEHICLE_TYPE', 
+                'value_id'=>'MLB1744',
             ]
         ];
 
@@ -689,36 +770,34 @@ class MercadoLivre
         }
 
         $location = [
-            'country'=>'BR',
-            'state'=>[
-                'id'=>'BR-GO',
-                'name'=>'Goiânia'
+            'country'=>[
+                'id'=>'BR'
             ],
+            
+            'state'=>[
+                'id'=>$params['id_state']
+            ],
+            
             'city'=>[
-                'id'=>'TUxR29p4m5pYQ',
-                'name'=>'Goiânia'
+                'id'=>$params['id_city']
             ]
         ];
 
         return $this->request($endpoint)
-          //  ->addHeader('Accept', 'application/json')
             ->addHeader('Content-Type', 'application/json')
             ->addPost('title', $params['title'])
-            ->addPost('category_id', 'MLB118852')
+            ->addPost('category_id', $params['category'])
             ->addPost('price', $params['price'])
             ->addPost('currency_id', 'BRL')
             ->addPost('buying_mode',$params['buying_mode'])
             ->addPost('available_quantity', $params['available_quantity'])
             ->addPost('listing_type_id', 'free')
             ->addPost('condition', $params['condition'])
-            // ->addPost('pictures', $pictures)
-            // ->addPost('seller_contact', $params['seller_contact'])
-            // ->addPost('location', $params['location'])
+            ->addPost('pictures', $pictures)
             ->addPost('location', $location)
             ->addPost('attributes', $attributes)
             ->addPost('description', $params['description'])
             ->getResponse();
-            //  "seller_id": 149982995,
     }
 
     /**
@@ -804,6 +883,53 @@ class MercadoLivre
             ->addHeader('Content-Type', 'application/json')
             ->addDelete(true)
             ->getResponse();
+    }
+
+
+    /**
+    * 
+    * update deal
+    *
+    *
+    * @var array
+    *      id_seller
+    *      id_blocked_user
+    *
+    * @return array     
+    *
+    **/
+    public function putDeal($params)
+    {
+        $endpoint = $this->_api . '/items'.$params['id_deal'].'?access_token='.self::$cfg['token'];
+        $request = $this->request($endpoint);
+        $request->addHeader('Content-Type', 'application/json');
+
+        foreach ($params['atributtes'] as $key => $value) {
+            $request->addPut($key,$value);
+        }
+                
+        $request->getResponse();
+    }
+
+    /**
+    * 
+    * update deal
+    *
+    *
+    * @var array
+    *      id_seller
+    *      id_blocked_user
+    *
+    * @return array     
+    *
+    **/
+    public function putStatusDeal($params)
+    {
+        $endpoint = $this->_api . '/items'.$params['id_deal'].'?access_token='.self::$cfg['token'];
+        $request = $this->request($endpoint);
+        $request->addHeader('Content-Type', 'application/json');
+        $request->addPut('status',$params['status']);        
+        $request->getResponse();
     }
 
     /**

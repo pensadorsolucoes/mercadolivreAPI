@@ -106,8 +106,6 @@ class Request
         if($this->_posts){
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($this->_posts));
-            var_dump(json_encode($this->_posts));
-            exit(0);
         }
 
         if($this->_puts){
@@ -124,12 +122,10 @@ class Request
         $curl_http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE );
         $header         = substr($resp, 0, $header_len);
         $body           = substr($resp, $header_len);
-                        var_dump($body);
-        exit(0);
 
         curl_close($ch);
 
-        if($curl_http_code == 200) {
+        if($curl_http_code == 200 || $curl_http_code == 201) {
 
             return [
                 'status' => 'ok',
