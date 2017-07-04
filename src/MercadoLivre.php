@@ -83,13 +83,17 @@ class MercadoLivre
 		return $endpoint . http_build_query(self::$cfg);
 	}
 
+    //======================================================================
+    // USER
+    //======================================================================
+
 	/**
 	* 
-	* Get Information related to your User Group
+	* Get Information related to your data
 	* @return array 	
 	*
 	**/
-    public function getMe($params)
+    public function getMe()
 	{
 		$endpoint = $this->_api . '/users/me?'.self::$cfg['token'];
 
@@ -102,14 +106,14 @@ class MercadoLivre
     * 
     * Get user's public information
     * @var array
-    *          user_id
+    *          id_user
     *
     * @return array     
     *
     **/
     public function getUsePublic($params)
     {
-        $endpoint = $this->_api . '/users/'.self::$params['user_id'];
+        $endpoint = $this->_api . '/users/'.self::$params['id_user'];
 
         return $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
@@ -120,19 +124,127 @@ class MercadoLivre
     * 
     * Get private information from a user who has accepted the use app
     * @var array
-    *          user_id
+    *          id_user
     *
     * @return array     
     *
     **/
-    public function getUsePrivate($params)
+    public function getUserPrivate($params)
     {
-        $endpoint = $this->_api . '/users/'.self::$params['user_id'].'?'.self::$cfg['token'];
+        $endpoint = $this->_api . '/users/'.self::$params['id_user'].'?'.self::$cfg['token'];
 
         return $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();
     }
+
+    /**
+    * 
+    * GET the amount of visits for a user in a period of time 
+    * @var array
+    *      id_user
+    *      date_from
+    *      date_to
+    *
+    * @return array     
+    *
+    **/
+    public function getUserVisits($params)
+    {
+        $endpoint = $this->_api.'/users/'.$params['id_user'].'/items_visits/?date_from='.$params['date_from'].'&date_to='.$params['date_to'];
+        $response = $this->request($endpoint)
+            ->addHeader('Accept', 'application/json')
+            ->getResponse();
+        return $response;
+    }
+
+    /**
+    * 
+    * GET the number of clicks on "view phone" that an user made
+    * @var array
+    *      id_user
+    *      date_from
+    *      date_to
+    *
+    * @return array     
+    *
+    **/
+    public function getUserViewNumber($params)
+    {
+        $endpoint = $this->_api.'/users/'.$params['id_user'].'/contacts/phone_views?date_from='.$params['date_from'].'&date_to='.$params['date_to'];
+        $response = $this->request($endpoint)
+            ->addHeader('Accept', 'application/json')
+            ->getResponse();
+        return $response;
+    }
+
+    /**
+    * 
+    * GET the number of clicks on "view phone" of a particular USER in a especific time window
+    *
+    * @var array
+    *      id_item
+    *      last
+    *      unit
+    *
+    * @return array     
+    *
+    **/
+    public function getViewPhoneUserIntervals($params)
+    {
+        $endpoint = $this->_api.'/users/'.$params['id_user'].'contacts/phone_views/time_window?last='.$params['last'].'&unit='.$params['unit'];
+        $response = $this->request($endpoint)
+            ->addHeader('Accept', 'application/json')
+            ->getResponse();
+        return $response;
+    }
+
+
+    /**
+    * 
+    * GET the total amount of Questions has a particular user in a date range 
+    *
+    * @var array
+    *      id_item
+    *      date_from
+    *      date_to
+    *
+    * @return array     
+    *
+    **/
+    public function getQuestionsUserContacts($params)
+    {
+        $endpoint = $this->_api.'/items/'.$params['id_user'].'contacts/questions?date_from='.$params['date_from'].'&date_to='.$params['date_to'];
+        $response = $this->request($endpoint)
+            ->addHeader('Accept', 'application/json')
+            ->getResponse();
+        return $response;
+    }
+
+    /**
+    * 
+    * GET the Questions on a particular User in a specific time window  
+    *
+    * @var array
+    *      id_item
+    *      last
+    *      unit
+    *
+    * @return array     
+    *
+    **/
+    public function getQuestionsUserParticularTimeWindow($params)
+    {
+        $endpoint = $this->_api.'/items/'.$params['id_user'].'contacts/questions/time_window?last='.$params['last'].'&unit='.$params['unit'];
+        $response = $this->request($endpoint)
+            ->addHeader('Accept', 'application/json')
+            ->getResponse();
+        return $response;
+    }
+
+    //======================================================================
+    // PROMOTIONAL PACKAGES
+    //======================================================================
 
     /**
     * 
@@ -157,36 +269,12 @@ class MercadoLivre
     * @return array     
     *
     **/
-    public function getPromotionalPackagesByUser()
+    public function getPromotionalPackagesByUser($params)
     {
-        $endpoint = $this->_api . '/users/'.$params['user_id'].'/classifieds_promotion_packs?'.self::$cfg['token'];
+        $endpoint = $this->_api . '/users/'.$params['id_user'].'/classifieds_promotion_packs?'.self::$cfg['token'];
 
         return $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
-            ->getResponse();
-    }
-
-    /**
-    * 
-    * Post Promotional packages are packages with classified publications of car dealerships
-    *
-    * @var array
-    *      user_id
-    *
-    * @return array     
-    *
-    **/
-    public function postPromotionalPackages($params)
-    {
-        $endpoint = $this->_api . '/users/'.$params['user_id'].'/classifieds_promotion_packs&'.self::$cfg['token'];
-
-        return $this->request($endpoint)
-            ->addHeader('Accept', 'application/json')
-            ->addHeader('Content-type', 'application/json')
-            ->addPost('categ_id', 'MLB1743')
-            ->addPost('promotion_pack_id', $params['promotion_pack_id'])
-            ->addPost('engagement_type', $params['engagement_type'])
-            ->addPost('status', 'active')
             ->getResponse();
     }
 
@@ -195,14 +283,14 @@ class MercadoLivre
     * Active Promotional packages are packages with classified publications of car dealerships
     * @var array
     *      user_promotion_pack_id
-    *      user_id
+    *      id_user
     *
     * @return array     
     *
     **/
-    public function activePromotionalPackages($params)
+    public function putActivePromotionalPackages($params)
     {
-        $endpoint = $this->_api . '/users/'.$params['user_id'].'/classifieds_promotion_packs/'.$params['user_promotion_pack_id'].'?'.self::$cfg['token'];
+        $endpoint = $this->_api . '/users/'.$params['id_user'].'/classifieds_promotion_packs/'.$params['user_promotion_pack_id'].'?'.self::$cfg['token'];
 
         return $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
@@ -212,7 +300,31 @@ class MercadoLivre
 
     /**
     * 
-    * Active Promotional packages are packages with classified publications of car dealerships
+    * Disable Promotional packages are packages with classified publications of car dealerships
+    * @var array
+    *      id_user
+    *      user_promotion_pack_id
+    *
+    * @return array     
+    *
+    **/
+    public function putDisablePromotionalPackages($params)
+    {
+        $endpoint = $this->_api . '/users/'.$params['id_user'].'/classifieds_promotion_packs/'.$params['user_promotion_pack_id'].'?'.self::$cfg['token'];
+
+        return $this->request($endpoint)
+            ->addHeader('Accept', 'application/json')
+            ->addPut('status', 'finished')
+            ->getResponse();
+    }
+
+    //======================================================================
+    // LIST OF TYPES, CHARACTERISTICS AND ATTRIBUTES
+    //======================================================================
+
+    /**
+    * 
+    * Get list kind of ads 
     *
     * @return array     
     *
@@ -229,51 +341,13 @@ class MercadoLivre
 
     /**
     * 
-    * Disable Promotional packages are packages with classified publications of car dealerships
-    * @var array
-    *      user_id
-    *      user_promotion_pack_id
+    * Get list kind of characteristics of category
     *
     * @return array     
     *
     **/
-    public function disablePromotionalPackages($params)
-    {
-        $endpoint = $this->_api . '/users/'.$params['user_id'].'/classifieds_promotion_packs/'.$params['user_promotion_pack_id'].'?'.self::$cfg['token'];
-
-        return $this->request($endpoint)
-            ->addHeader('Accept', 'application/json')
-            ->addPut('status', 'finished')
-            ->getResponse();
-    }
-
-    /**
-    * 
-    * Disable Promotional packages are packages with classified publications of car dealerships
-    * @var array
-    *      id_product
-    *
-    * @return array     
-    *
-    **/
-    public function getDeal($params)
-    {
-        $endpoint = $this->_api . '/items/'.$params['id_product'];
-
-        return $this->request($endpoint)
-            ->addHeader('Accept', 'application/json')
-            ->getResponse();       
-    }
-
-    /**
-    * 
-    * Disable Promotional packages are packages with classified publications of car dealerships
-    *
-    * @return array     
-    *
-    **/
-    public function getCharacteristics(){
-        $endpoint = $this->_api .'MLB118852/attributes';
+    public function getCharacteristics($params){
+        $endpoint = $this->_api .'/categories/'.$params['id_category'].'/attributes';
         return $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();         
@@ -282,7 +356,7 @@ class MercadoLivre
 
     /**
     * 
-    * Disable Promotional packages are packages with classified publications of car dealerships
+    * Get list kind of attributes of car
     *
     * @var array
     *      id_category
@@ -312,7 +386,7 @@ class MercadoLivre
 
     /**
     * 
-    * Disable Promotional packages are packages with classified publications of car dealerships
+    * Get list kind of fuel types
     *
     * @return array     
     *
@@ -328,7 +402,7 @@ class MercadoLivre
 
     /**
     * 
-    * Disable Promotional packages are packages with classified publications of car dealerships
+    * Get state List 
     *
     * @return array     
     *
@@ -361,24 +435,52 @@ class MercadoLivre
     }
 
     /**
-    * 
-    * GET the amount of visits for a user in a period of time 
+    * GET Returns brand cars and the children category of marker
+
+    *
     * @var array
-    *      id_user
-    *      date_from
-    *      date_to
+    *      id_seller
     *
     * @return array     
     *
     **/
-    public function getUserVisitsItems($params)
+    public function getMarker()
     {
-        $endpoint = $this->_api.'/users/'.$params['id_user'].'/items_visits/?date_from='.$params['date_from'].'&date_to='.$params['date_to'];
+        $endpoint = $this->_api.'/categories/MLB1744';
         $response = $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();
-        return $response;
+            return [
+                'status' => 'ok',
+                'body' => $response['body']['children_categories']
+            ];
     }
+
+    /**
+    * GET Returns model cars and the children category of model
+
+    *
+    * @var array
+    *      id_seller
+    *
+    * @return array     
+    *
+    **/
+    public function getModelAndCategory($params)
+    {
+        $endpoint = $this->_api.'/categories/'.$params['id_marker'];
+        $response = $this->request($endpoint)
+            ->addHeader('Accept', 'application/json')
+            ->getResponse();
+            return [
+                'status' => 'ok',
+                'body' => $response['body']['children_categories']
+            ];
+    }
+
+    //======================================================================
+    // Leads
+    //======================================================================
 
     /**
     * 
@@ -606,7 +708,114 @@ class MercadoLivre
 
     /**
     * 
-    * GET Search my own items
+    * Post a new Answer
+    *
+    *
+    * @var array
+    *      id_question
+    *      answer
+    *
+    * @return array     
+    *
+    **/
+    public function postAnswerQuestion($params)
+    {
+        $endpoint = $this->_api . '/answers?access_token='.self::$cfg['token'];
+        return $this->request($endpoint)
+            ->addHeader('Content-Type', 'application/json')
+            ->addPost('question_id', $params['id_question'])
+            ->addPost('text', $params['answer'])
+            ->getResponse();
+    }
+
+    /**
+    * 
+    * Post block user to send question
+    *
+    *
+    * @var array
+    *      id_seller
+    *      id_user
+    *
+    * @return array     
+    *
+    **/
+    public function postAnswerQuestionBlock($params)
+    {
+        $endpoint = $this->_api . '/users/'.$params['id_seller'].'questions_blacklist?access_token='.self::$cfg['token'];
+        return $this->request($endpoint)
+            ->addHeader('Content-Type', 'application/json')
+            ->addPost('id_user', $params['id_user'])
+            ->getResponse();
+    }
+
+    /**
+    * 
+    * Delete a Answer
+    *
+    *
+    * @var array
+    *      id_question
+    *      answer
+    *
+    * @return array     
+    *
+    **/
+    public function deleteAnswerQuestion($params)
+    {
+        $endpoint = $this->_api . '/'.$params['id_question'].'?access_token='.self::$cfg['token'];
+        return $this->request($endpoint)
+            ->addHeader('Content-Type', 'application/json')
+            ->addDelete(true)
+            ->getResponse();
+    }
+
+    /**
+    * 
+    * Delete block user to send question
+    *
+    *
+    * @var array
+    *      id_seller
+    *      id_blocked_user
+    *
+    * @return array     
+    *
+    **/
+    public function deleteAnswerQuestionBlock($params)
+    {
+        $endpoint = $this->_api . '/users/'.$params['id_seller'].'questions_blacklist/'.$params['id_blocked_user'].'?access_token='.self::$cfg['token'];
+        return $this->request($endpoint)
+            ->addHeader('Content-Type', 'application/json')
+            ->addDelete(true)
+            ->getResponse();
+    }
+
+    //======================================================================
+    // DEAL
+    //======================================================================
+
+    /**
+    * 
+    * Get deal
+    * @var array
+    *      id_product
+    *
+    * @return array     
+    *
+    **/
+    public function getDeal($params)
+    {
+        $endpoint = $this->_api . '/items/'.$params['id_item'];
+
+        return $this->request($endpoint)
+            ->addHeader('Accept', 'application/json')
+            ->getResponse();       
+    }
+
+    /**
+    * 
+    * GET user ads
     *
     * @var array
     *      id_user
@@ -642,49 +851,6 @@ class MercadoLivre
         return $response;
     }
 
-    /**
-    * GET Returns brand cars and the children category of marker
-
-    *
-    * @var array
-    *      id_seller
-    *
-    * @return array     
-    *
-    **/
-    public function getMarker()
-    {
-        $endpoint = $this->_api.'/categories/MLB1744';
-        $response = $this->request($endpoint)
-            ->addHeader('Accept', 'application/json')
-            ->getResponse();
-            return [
-                'status' => 'ok',
-                'body' => $response['body']['children_categories']
-            ];
-    }
-
-    /**
-    * GET Returns model cars and the children category of model
-
-    *
-    * @var array
-    *      id_seller
-    *
-    * @return array     
-    *
-    **/
-    public function getModelAndCategory($params)
-    {
-        $endpoint = $this->_api.'/categories/'.$params['id_marker'];
-        $response = $this->request($endpoint)
-            ->addHeader('Accept', 'application/json')
-            ->getResponse();
-            return [
-                'status' => 'ok',
-                'body' => $response['body']['children_categories']
-            ];
-    }
 
     /**
     * 
@@ -707,7 +873,7 @@ class MercadoLivre
 
     /**
     * 
-    * Disable Promotional packages are packages with classified publications of car dealerships
+    * Crate a new deal
     *
     *
     * @var array
@@ -789,10 +955,10 @@ class MercadoLivre
             ->addPost('category_id', $params['category'])
             ->addPost('price', $params['price'])
             ->addPost('currency_id', 'BRL')
-            ->addPost('buying_mode',$params['buying_mode'])
+            ->addPost('buying_mode','classified')
             ->addPost('available_quantity', $params['available_quantity'])
             ->addPost('listing_type_id', 'free')
-            ->addPost('condition', $params['condition'])
+            ->addPost('condition', 'not_specified')
             ->addPost('pictures', $pictures)
             ->addPost('location', $location)
             ->addPost('attributes', $attributes)
@@ -802,89 +968,27 @@ class MercadoLivre
 
     /**
     * 
-    * Post a new Answer
-    *
-    *
-    * @var array
-    *      id_question
-    *      answer
-    *
-    * @return array     
-    *
-    **/
-    public function postAnswerQuestion($params)
-    {
-        $endpoint = $this->_api . '/answers?access_token='.self::$cfg['token'];
-        return $this->request($endpoint)
-            ->addHeader('Content-Type', 'application/json')
-            ->addPost('question_id', $params['id_question'])
-            ->addPost('text', $params['answer'])
-            ->getResponse();
-    }
-
-    /**
-    * 
-    * Post block user to send question
-    *
+    * Post Promotional packages are packages with classified publications of car dealerships
     *
     * @var array
-    *      id_seller
     *      id_user
     *
     * @return array     
     *
     **/
-    public function postAnswerQuestionBlock($params)
+    public function postPromotionalPackages($params)
     {
-        $endpoint = $this->_api . '/users/'.$params['id_seller'].'questions_blacklist?access_token='.self::$cfg['token'];
+        $endpoint = $this->_api . '/users/'.$params['id_user'].'/classifieds_promotion_packs&'.self::$cfg['token'];
+
         return $this->request($endpoint)
-            ->addHeader('Content-Type', 'application/json')
-            ->addPost('user_id', $params['id_user'])
+            ->addHeader('Accept', 'application/json')
+            ->addHeader('Content-type', 'application/json')
+            ->addPost('categ_id', 'MLB1743')
+            ->addPost('promotion_pack_id', $params['promotion_pack_id'])
+            ->addPost('engagement_type', $params['engagement_type'])
+            ->addPost('status', 'active')
             ->getResponse();
     }
-
-    /**
-    * 
-    * Delete a Answer
-    *
-    *
-    * @var array
-    *      id_question
-    *      answer
-    *
-    * @return array     
-    *
-    **/
-    public function deleteAnswerQuestion($params)
-    {
-        $endpoint = $this->_api . '/'.$params['id_question'].'?access_token='.self::$cfg['token'];
-        return $this->request($endpoint)
-            ->addHeader('Content-Type', 'application/json')
-            ->addDelete(true)
-            ->getResponse();
-    }
-
-    /**
-    * 
-    * Delete block user to send question
-    *
-    *
-    * @var array
-    *      id_seller
-    *      id_blocked_user
-    *
-    * @return array     
-    *
-    **/
-    public function deleteAnswerQuestionBlock($params)
-    {
-        $endpoint = $this->_api . '/users/'.$params['id_seller'].'questions_blacklist/'.$params['id_blocked_user'].'?access_token='.self::$cfg['token'];
-        return $this->request($endpoint)
-            ->addHeader('Content-Type', 'application/json')
-            ->addDelete(true)
-            ->getResponse();
-    }
-
 
     /**
     * 
@@ -913,7 +1017,7 @@ class MercadoLivre
 
     /**
     * 
-    * update deal
+    * update status deal
     *
     *
     * @var array
