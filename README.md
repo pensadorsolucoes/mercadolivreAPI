@@ -16,7 +16,7 @@ Please report bugs or issues to [click here](https://github.com/Veloccer/mercado
 step by step - not ready
 
 # Wiki
-To learn more about api olx, all features, functions, read the [wiki here](https://github.com/Veloccer/mercadolivreAPI/wiki).
+To learn more about api mercadoLivreApi, all features, functions, read the [wiki here](https://github.com/Veloccer/mercadolivreAPI/wiki).
 
 # Return
 ```sh
