@@ -1,4 +1,4 @@
-# OLX SDK
+# MercadoLivreAPI SDK
 This open-source library allows you to integrate Mercado Livre into your app. Learn more about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more at, [click here](http://developers.mercadolibre.com/pt-br/guia-para-veiculos/)
 
 ## Dependencies
