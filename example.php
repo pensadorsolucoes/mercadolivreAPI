@@ -1,32 +1,23 @@
 <?php
-
 error_reporting(1);
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
 use mercadolivreAPI\MercadoLivre as mercadoLivre;
 require('vendor/autoload.php');
-
 //======================================================================
 // Oauth
 //======================================================================
-
 $ml = new mercadoLivre(array(
 	'redirect_uri' => '{app uri}',
 	'client_id' => '{client_id}',
 	'response_type'=>'token'
 ));
-
 $url = $ml->getLoginUrl();
-
-
 //======================================================================
 // Post new Deal
 //======================================================================
-
 $token='APP_USR-6476276740985133-070206-89f159519e3436748cfeefd89a181d39__B_L__-149982995';
 $ml = new mercadoLivre($token);
-
 $params = array(
 	'category'=>'MLB118852',
 	'marker'=>'Hyundai',
@@ -53,7 +44,6 @@ $params = array(
 		'http://4.bp.blogspot.com/-ywajauwIV2g/VlMoW3b6TtI/AAAAAAACQig/xxTZX40A2Og/s1600/Hyundai-HB20S-2016%2B%25284%2529.jpg',
 		'http://primeiramarcha.com.br/wp-content/uploads/2015/09/Hyundai-HB20-2016-6.jpg'
 	],
-
   	'attributes'=>[
   		'HAS_AIR_CONDITIONING', 
   		'HAS_SIDE_IMPACT_AIRBAG', 
@@ -61,11 +51,9 @@ $params = array(
   		'HAS_LIGHT_SENSOR', 
   		'HAS_ELECTRIC_MIRRORS'
   	],
-
   	'description'=> 'This is the real estate property description.'
 );
 $item = $ml->postDeal($params);
-
 //======================================================================
 // Put Deal
 //======================================================================
@@ -73,7 +61,6 @@ $item = $ml->postDeal($params);
 // just attributes you want update
 $ml = new mercadoLivre($token);
 $params['id_deal'] = 'MLB36169';
-
 $params['atributtes'] = array(
 	'category'=>'MLB118852',
 	'marker'=>'Hyundai',
@@ -100,7 +87,6 @@ $params['atributtes'] = array(
 		'http://4.bp.blogspot.com/-ywajauwIV2g/VlMoW3b6TtI/AAAAAAACQig/xxTZX40A2Og/s1600/Hyundai-HB20S-2016%2B%25284%2529.jpg',
 		'http://primeiramarcha.com.br/wp-content/uploads/2015/09/Hyundai-HB20-2016-6.jpg'
 	],
-
   	'attributes'=>[
   		'HAS_AIR_CONDITIONING', 
   		'HAS_SIDE_IMPACT_AIRBAG', 
@@ -108,25 +94,20 @@ $params['atributtes'] = array(
   		'HAS_LIGHT_SENSOR', 
   		'HAS_ELECTRIC_MIRRORS'
   	],
-
   	'description'=> 'This is the real estate property description.'
 );
 $item = $ml->putDeal($params);
-
 //======================================================================
 // Get Brand
 //======================================================================
 $item = $ml->getBrand();
 var_dump($item);
-
 //======================================================================
 // GET model Category
 //======================================================================
 $params['id_category']='MLB5782';
 $item = $ml->getModelAndCategory($params);
-
 //======================================================================
 // GET Attributes
 //======================================================================
 $item = $ml->getAttributes($params);
-

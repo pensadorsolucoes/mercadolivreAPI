@@ -192,7 +192,7 @@ class MercadoLivre
     **/
     public function getViewPhoneUserIntervals($params)
     {
-        $endpoint = $this->_api.'/users/'.$params['id_user'].'contacts/phone_views/time_window?last='.$params['last'].'&unit='.$params['unit'];
+        $endpoint = $this->_api.'/users/'.$params['id_user'].'/contacts/phone_views/time_window?last='.$params['last'].'&unit='.$params['unit'];
         $response = $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();
@@ -214,7 +214,7 @@ class MercadoLivre
     **/
     public function getQuestionsUserContacts($params)
     {
-        $endpoint = $this->_api.'/items/'.$params['id_user'].'contacts/questions?date_from='.$params['date_from'].'&date_to='.$params['date_to'];
+        $endpoint = $this->_api.'/items/'.$params['id_user'].'/contacts/questions?date_from='.$params['date_from'].'&date_to='.$params['date_to'];
         $response = $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();
@@ -235,7 +235,29 @@ class MercadoLivre
     **/
     public function getQuestionsUserParticularTimeWindow($params)
     {
-        $endpoint = $this->_api.'/items/'.$params['id_user'].'contacts/questions/time_window?last='.$params['last'].'&unit='.$params['unit'];
+        $endpoint = $this->_api.'/items/'.$params['id_user'].'/contacts/questions/time_window?last='.$params['last'].'&unit='.$params['unit'];
+        $response = $this->request($endpoint)
+            ->addHeader('Accept', 'application/json')
+            ->getResponse();
+        return $response;
+    }
+
+    /**
+    * 
+    * GET Information about the profile in Mercadolivre 
+    *
+    * @var array
+    *      id_item
+    *      last
+    *      unit
+    *
+    * @return array     
+    *
+    **/
+    public function getInformationProfile($params)
+    {
+        /users/{user_id}/goals_component?access_token={...}
+        $endpoint = $this->_api.'/users/'.$params['id_user'].'/goals_component?'.self::$cfg['token'];
         $response = $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();
@@ -534,7 +556,7 @@ class MercadoLivre
     **/
     public function getQuestionsItem($params)
     {
-        $endpoint = $this->_api.'/items/'.$params['id_item'].'questions?data_from='.$params['date_from'].'&date_to='.$params['date_to'];
+        $endpoint = $this->_api.'/items/'.$params['id_item'].'/questions?data_from='.$params['date_from'].'&date_to='.$params['date_to'];
         $response = $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();
@@ -558,7 +580,7 @@ class MercadoLivre
     public function getQuestionsItemParticular($params)
     {
 
-        $endpoint = $this->_api.'/items/'.$params['id_item'].'contacts/questions/search?data_from='.$params['date_from'].'&date_to='.$params['date_to'].'limit='.$params['limit'].'&offset='.$params['offset'];
+        $endpoint = $this->_api.'/items/'.$params['id_item'].'/contacts/questions/search?data_from='.$params['date_from'].'&date_to='.$params['date_to'].'limit='.$params['limit'].'&offset='.$params['offset'];
 
         $response = $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
@@ -580,7 +602,7 @@ class MercadoLivre
     **/
     public function getViewPhoneItem($params)
     {
-        $endpoint = $this->_api.'/items/'.$params['id_item'].'contacts/questions/search?data_from='.$params['date_from'].'&date_to='.$params['date_to'];
+        $endpoint = $this->_api.'/items/'.$params['id_item'].'/contacts/questions/search?data_from='.$params['date_from'].'&date_to='.$params['date_to'];
         $response = $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();
@@ -601,7 +623,7 @@ class MercadoLivre
     **/
     public function getViewPhoneItemIntervals($params)
     {
-        $endpoint = $this->_api.'/items/'.$params['id_item'].'contacts/phone_views/time_window?last='.$params['last'].'&unit='.$params['unit'];
+        $endpoint = $this->_api.'/items/'.$params['id_item'].'/contacts/phone_views/time_window?last='.$params['last'].'&unit='.$params['unit'];
         $response = $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();
@@ -622,7 +644,7 @@ class MercadoLivre
     **/
     public function getQuestionsItemContacts($params)
     {
-        $endpoint = $this->_api.'/items/'.$params['id_item'].'contacts/questions?date_from='.$params['date_from'].'&date_to='.$params['date_to'];
+        $endpoint = $this->_api.'/items/'.$params['id_item'].'/contacts/questions?date_from='.$params['date_from'].'&date_to='.$params['date_to'];
         $response = $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();
@@ -643,7 +665,7 @@ class MercadoLivre
     **/
     public function getQuestionsItemParticularTimeWindow($params)
     {
-        $endpoint = $this->_api.'/items/'.$params['id_item'].'contacts/questions/time_window?last='.$params['last'].'&unit='.$params['unit'];
+        $endpoint = $this->_api.'/items/'.$params['id_item'].'/contacts/questions/time_window?last='.$params['last'].'&unit='.$params['unit'];
         $response = $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();
@@ -763,7 +785,7 @@ class MercadoLivre
     **/
     public function deleteAnswerQuestion($params)
     {
-        $endpoint = $this->_api . '/'.$params['id_question'].'?access_token='.self::$cfg['token'];
+        $endpoint = $this->_api . '/questions/'.$params['id_question'].'?access_token='.self::$cfg['token'];
         return $this->request($endpoint)
             ->addHeader('Content-Type', 'application/json')
             ->addDelete(true)
@@ -784,7 +806,7 @@ class MercadoLivre
     **/
     public function deleteAnswerQuestionBlock($params)
     {
-        $endpoint = $this->_api . '/users/'.$params['id_seller'].'questions_blacklist/'.$params['id_blocked_user'].'?access_token='.self::$cfg['token'];
+        $endpoint = $this->_api . '/users/'.$params['id_seller'].'/questions_blacklist?'.self::$cfg['token'];
         return $this->request($endpoint)
             ->addHeader('Content-Type', 'application/json')
             ->addDelete(true)
@@ -825,7 +847,7 @@ class MercadoLivre
     **/
     public function getDealByUse($params)
     {
-        $endpoint = $this->_api.'/uses/'.$params['id_user'].'/items/search?access_token='.self::$cfg['token'];
+        $endpoint = $this->_api.'/uses/'.$params['id_user'].'/items/search?'.self::$cfg['token'];
         $response = $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();
@@ -844,7 +866,7 @@ class MercadoLivre
     **/
     public function getRecentSeller($params)
     {
-        $endpoint = $this->_api.'/orders/'.$params['id_order'].'/&access_token='.self::$cfg['token'];
+        $endpoint = $this->_api.'/orders/'.$params['id_order'].'/&'.self::$cfg['token'];
         $response = $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();
@@ -864,7 +886,7 @@ class MercadoLivre
     **/
     public function getRecentSearchSeller($params)
     {
-        $endpoint = $this->_api.'/orders/search/recent?seller='.$params['id_seller'].'&access_token'.self::$cfg['token'];
+        $endpoint = $this->_api.'/orders/search/recent?seller='.$params['id_seller'].'&'.self::$cfg['token'];
         $response = $this->request($endpoint)
             ->addHeader('Accept', 'application/json')
             ->getResponse();
@@ -1004,7 +1026,7 @@ class MercadoLivre
     **/
     public function putDeal($params)
     {
-        $endpoint = $this->_api . '/items'.$params['id_deal'].'?access_token='.self::$cfg['token'];
+        $endpoint = $this->_api . '/items'.$params['id_deal'].'?'.self::$cfg['token'];
         $request = $this->request($endpoint);
         $request->addHeader('Content-Type', 'application/json');
 
@@ -1029,12 +1051,32 @@ class MercadoLivre
     **/
     public function putStatusDeal($params)
     {
-        $endpoint = $this->_api . '/items'.$params['id_deal'].'?access_token='.self::$cfg['token'];
+        $endpoint = $this->_api . '/items'.$params['id_deal'].'?'.self::$cfg['token'];
         $request = $this->request($endpoint);
         $request->addHeader('Content-Type', 'application/json');
         $request->addPut('status',$params['status']);        
         $request->getResponse();
     }
+
+    /**
+    * 
+    * GET Feedback info
+    *
+    * @return array     
+    *
+    **/
+    public function getFeedbackInfo()
+    {
+        $endpoint = $this->_api . '/feedback';
+        $request = $this->request($endpoint);
+        $request->addHeader('Content-Type', 'application/json');
+        $request->getResponse();
+    }
+
+
+    //======================================================================
+    // Request
+    //======================================================================
 
     /**
      *
