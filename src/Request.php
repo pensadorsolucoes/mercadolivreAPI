@@ -6,7 +6,7 @@ class Request
     /**
      * The Icarros class instance we belong to.
      *
-     * @var \IcarrosAPI\Icarros
+     * @var \mercadolivreAPI\MercadoLivre
      */
     protected $_parent;
 
