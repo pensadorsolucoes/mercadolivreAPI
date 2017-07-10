@@ -41,4 +41,4 @@ To learn more about api mercadoLivreApi, all features, functions, read the [wiki
 # License
 Mercado Livre SDK is Copyright © 2017 haganicolau.
 
-It is free software, and may be redistributed under the terms specified in the [LICENSE.txt](https://github.com/Veloccer/olx/blob/master/LICENSE.txt)
+It is free software, and may be redistributed under the terms specified in the [LICENSE.txt](https://github.com/Veloccer/mercadolivreAPI/blob/master/LICENSE.txt)
