@@ -23,7 +23,7 @@ To learn more about api mercadoLivreApi, all features, functions, read the [wiki
 
   array(2){
     'status' => 'ok',
-    'body' => json_body
+    'body' => array()
     };
 ```
 
